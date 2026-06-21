@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقرير الإحصائي — نظام إتمام | جامعة الملك عبدالعزيز</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/*──────────────────────────────────────────────
+  RESET & ROOT
+──────────────────────────────────────────────*/
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gd: #055934; --gm: #208D44; --gl: #86C242;
+  --gp: #EAF4ED; --gb: #C8E6D0;
+  --rd: #C0392B; --rl: #FDECEA;
+  --am: #E67E22; --al: #FEF5EA;
+  --bl: #1A6FAF; --bll: #EAF2FB;
+  --gy: #2C3E50; --gm2: #6B7280; --gl2: #F4F6F8;
+  --wh: #FFFFFF; --gold: #C8A84B;
+  --sidebar: 190px;
+}
+html { scroll-behavior: smooth; }
+body { font-family:'Tajawal','Arial',sans-serif; background:#F0F2F5; color:var(--gy); }
+
+/*──────────────────────────────────────────────
+  VIEWS — landing / report
+──────────────────────────────────────────────*/
+#view-landing { display:block; }
+#view-report  { display:none; }
+
+.fade-in  { animation: fadeIn  .5s ease both; }
+.fade-out { animation: fadeOut .4s ease both; }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes fadeOut { from{opacity:1} to{opacity:0} }
+
+/*══════════════════════════════════════════════
+  LANDING PAGE
+══════════════════════════════════════════════*/
+
+/* Navbar */
+.navbar {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  background:var(--wh); border-bottom:3px solid var(--gd);
+  padding:10px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+.nav-dept { font-size:13px; font-weight:700; color:var(--gd); line-height:1.4; }
+.nav-dept small { display:block; font-size:9px; font-weight:400; color:#666; }
+.nav-center { display:flex; align-items:center; gap:8px; }
+.nav-kau-lbl { font-size:13px; font-weight:800; color:var(--gd); line-height:1.3; text-align:center; }
+.nav-shield {
+  width:40px; height:40px; border-radius:50%; background:var(--gd);
+  display:flex; align-items:center; justify-content:center; border:2px solid var(--gl);
+  font-size:7px; font-weight:900; color:var(--wh); text-align:center; line-height:1.3;
+}
+.nav-menu { display:flex; flex-direction:column; gap:5px; cursor:pointer; padding:6px; border:1px solid #ddd; border-radius:6px; background:none; }
+.nav-menu span { display:block; width:20px; height:2px; background:var(--gd); border-radius:2px; }
+
+/* Hero */
+.hero {
+  position:relative; min-height:100vh; display:flex; flex-direction:column;
+  padding-top:66px; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background: linear-gradient(170deg,#021a0e 0%,#043e25 40%,#021a0e 100%);
+}
+.hero-bg::before {
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(120deg,transparent,transparent 80px,rgba(255,255,255,.018) 80px,rgba(255,255,255,.018) 160px);
+}
+.hero-bg::after {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 70% 40%,rgba(32,141,68,.25) 0%,transparent 55%);
+}
+.hero-inner { position:relative; z-index:2; flex:1; display:flex; flex-direction:column; }
+
+.hero-logos {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:28px 32px 0;
+  animation: fadeDown .7s ease both;
+}
+.logo-block { display:flex; align-items:center; gap:10px; }
+.logo-ar { font-size:14px; font-weight:800; color:var(--wh); line-height:1.3; }
+.logo-en { font-size:10px; font-weight:400; color:rgba(255,255,255,.55); }
+.shield-lg {
+  width:58px; height:58px; border-radius:50%; background:var(--wh);
+  border:2px solid rgba(255,255,255,.3); display:flex; align-items:center; justify-content:center;
+  font-size:8px; font-weight:900; color:var(--gd); text-align:center; line-height:1.3; flex-shrink:0;
+}
+
+.hero-content {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:20px 24px;
+}
+.eyebrow {
+  display:flex; align-items:center; gap:14px; margin-bottom:22px;
+  animation: fadeDown .8s .15s ease both;
+}
+.eyebrow-line { width:50px; height:2px; background:var(--gold); }
+.eyebrow-text { font-size:12px; font-weight:700; color:var(--gold); letter-spacing:3px; }
+.hero-h1 {
+  font-size:clamp(34px,5.5vw,64px); font-weight:900; color:var(--wh);
+  line-height:1.2; margin-bottom:12px;
+  animation: fadeUp .8s .25s ease both;
+}
+.hero-sub { font-size:clamp(14px,2vw,20px); color:rgba(255,255,255,.8); margin-bottom:8px; animation:fadeUp .8s .35s ease both; }
+.hero-period { font-size:14px; color:rgba(255,255,255,.55); margin-bottom:36px; animation:fadeUp .8s .4s ease both; }
+
+.cta-hero {
+  display:inline-flex; align-items:center; gap:10px;
+  background:var(--wh); color:var(--gd);
+  font-family:'Tajawal',sans-serif; font-size:17px; font-weight:800;
+  padding:16px 42px; border-radius:50px; border:none; cursor:pointer;
+  box-shadow:0 8px 30px rgba(0,0,0,.25); transition:all .25s;
+  animation:fadeUp .8s .5s ease both; min-width:260px;
+}
+.cta-hero:hover { background:var(--gl); color:var(--gd); transform:translateY(-3px); box-shadow:0 14px 40px rgba(0,0,0,.3); }
+.cta-hero .arr { font-size:20px; direction:ltr; transition:transform .2s; }
+.cta-hero:hover .arr { transform:translateX(-4px); }
+
+.scroll-hint {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding-bottom:24px; color:rgba(255,255,255,.4); font-size:10px;
+  animation:fadeUp .8s .7s ease both; cursor:pointer;
+}
+.scroll-mouse {
+  width:20px; height:34px; border:2px solid rgba(255,255,255,.25); border-radius:10px;
+  display:flex; align-items:flex-start; justify-content:center; padding-top:5px;
+}
+.scroll-mouse::before {
+  content:''; width:4px; height:8px; background:rgba(255,255,255,.5); border-radius:2px;
+  animation:scrollBob 1.4s ease-in-out infinite;
+}
+@keyframes scrollBob { 0%,100%{transform:translateY(0);opacity:1} 60%{transform:translateY(8px);opacity:.3} }
+
+/* Stats section */
+.stats-section { background:#f7f9f7; padding:56px 32px; border-top:4px solid var(--gd); }
+.stats-hdr { text-align:center; margin-bottom:40px; }
+.stats-hdr h2 { font-size:26px; font-weight:900; color:var(--gd); margin-bottom:8px; }
+.stats-hdr p  { font-size:13px; color:#666; }
+.stats-divider { width:60px; height:3px; background:var(--gl); margin:10px auto 0; border-radius:2px; }
+
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; max-width:940px; margin:0 auto 18px; }
+.stats-grid-2 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; max-width:700px; margin:0 auto; }
+.s-card {
+  background:var(--wh); border-radius:14px; padding:26px 16px 20px; text-align:center;
+  border:1px solid #e8f0e8; border-top:4px solid var(--ca,var(--gd));
+  box-shadow:0 4px 14px rgba(0,0,0,.06); transition:transform .2s,box-shadow .2s;
+  opacity:0; transform:translateY(24px);
+}
+.s-card.in { animation:cardIn .55s ease forwards; }
+@keyframes cardIn { to{opacity:1;transform:translateY(0)} }
+.s-card:hover { transform:translateY(-5px); box-shadow:0 10px 28px rgba(0,0,0,.12); }
+.s-icon { font-size:28px; display:block; margin-bottom:10px; }
+.s-num  { font-size:42px; font-weight:900; line-height:1; display:block; margin-bottom:6px; font-variant-numeric:tabular-nums; }
+.s-lbl  { font-size:12px; color:#666; font-weight:500; line-height:1.5; }
+.s-sub  { font-size:11px; font-weight:700; margin-top:5px; display:block; }
+
+/* Info section */
+.info-sec { background:var(--gd); padding:50px 32px; text-align:center; }
+.info-sec h2 { font-size:22px; font-weight:800; color:var(--wh); margin-bottom:8px; }
+.info-sec p  { font-size:13px; color:rgba(255,255,255,.7); max-width:580px; margin:0 auto 28px; line-height:1.8; }
+.info-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; max-width:780px; margin:0 auto; }
+.info-item { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:18px 14px; }
+.info-item i  { font-size:24px; display:block; margin-bottom:7px; }
+.info-item b  { font-size:12px; font-weight:700; color:var(--gl); display:block; margin-bottom:5px; }
+.info-item p  { font-size:10px; color:rgba(255,255,255,.6); line-height:1.6; }
+
+.site-footer {
+  background:#021a0d; padding:18px 32px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:11px; color:rgba(255,255,255,.45); flex-wrap:wrap; gap:8px;
+}
+.site-footer strong { color:rgba(255,255,255,.7); }
+
+/*══════════════════════════════════════════════
+  REPORT VIEW
+══════════════════════════════════════════════*/
+#view-report { min-height:100vh; }
+
+/* Report nav bar */
+.r-topbar {
+  position:fixed; top:0; left:0; right:0; z-index:150;
+  background:var(--wh); border-bottom:2px solid var(--gb);
+  padding:10px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.r-topbar-brand { display:flex; align-items:center; gap:10px; }
+.r-topbar-brand .r-shield {
+  width:36px; height:36px; border-radius:50%; background:var(--gd); border:2px solid var(--gl);
+  display:flex; align-items:center; justify-content:center;
+  font-size:6px; font-weight:900; color:var(--wh); text-align:center; line-height:1.3;
+}
+.r-topbar-brand .r-title { font-size:12px; font-weight:800; color:var(--gd); line-height:1.3; }
+.r-topbar-brand .r-sub   { font-size:9px; color:var(--gm2); }
+.r-nav-pages { display:flex; align-items:center; gap:5px; }
+.r-pg-btn {
+  width:28px; height:28px; border-radius:50%;
+  border:2px solid var(--gb); background:var(--wh); color:var(--gm2);
+  font-size:10px; font-weight:700; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s; font-family:'Tajawal',sans-serif;
+}
+.r-pg-btn.active { background:var(--gd); border-color:var(--gd); color:var(--wh); }
+.r-pg-btn:hover:not(.active) { background:var(--gp); border-color:var(--gd); }
+.r-nav-arrows { display:flex; gap:6px; }
+.r-arr-btn {
+  padding:6px 14px; border-radius:6px; font-family:'Tajawal',sans-serif;
+  font-size:11px; font-weight:700; cursor:pointer; transition:all .15s;
+}
+.r-arr-btn.prev { border:1px solid var(--gb); background:var(--wh); color:var(--gd); }
+.r-arr-btn.next { border:none; background:var(--gd); color:var(--wh); }
+.r-arr-btn:disabled { opacity:.4; cursor:not-allowed; }
+.r-home-btn {
+  padding:6px 14px; border-radius:6px; font-family:'Tajawal',sans-serif;
+  font-size:11px; font-weight:700; cursor:pointer; transition:all .15s;
+  border:1px solid var(--gb); background:var(--wh); color:var(--gm2);
+}
+.r-home-btn:hover { color:var(--gd); border-color:var(--gd); }
+
+/* Sidebar */
+.r-layout { display:flex; padding-top:62px; min-height:100vh; }
+.r-sidebar {
+  width:var(--sidebar); background:var(--gd); flex-shrink:0;
+  position:fixed; top:62px; bottom:0; overflow-y:auto; z-index:100;
+  display:flex; flex-direction:column;
+}
+.r-sidebar-hdr {
+  padding:14px 14px 12px; border-bottom:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6); font-size:9px; line-height:1.6;
+}
+.r-sidebar-hdr b { display:block; color:var(--wh); font-size:11px; margin-bottom:2px; }
+.r-sidebar-nav { flex:1; padding:8px 0; }
+.r-sidebar-item {
+  display:flex; align-items:center; gap:8px; width:100%;
+  padding:10px 14px; border:none; cursor:pointer; background:transparent;
+  color:rgba(255,255,255,.65); font-size:11px; font-family:'Tajawal',sans-serif;
+  border-right:3px solid transparent; text-align:right; transition:all .15s;
+}
+.r-sidebar-item:hover { background:rgba(255,255,255,.08); color:var(--wh); }
+.r-sidebar-item.active { background:rgba(255,255,255,.13); color:var(--wh); font-weight:700; border-right-color:var(--gl); }
+.r-sidebar-item .s-ico { font-size:15px; flex-shrink:0; }
+.r-sidebar-foot { padding:12px 14px; border-top:1px solid rgba(255,255,255,.12); font-size:9px; color:rgba(255,255,255,.4); line-height:1.7; }
+
+/* Main content */
+.r-main { margin-right:var(--sidebar); flex:1; min-width:0; }
+.r-page { display:none; }
+.r-page.active { display:block; animation:fadeIn .3s ease; }
+
+/* Page shared header/footer */
+.p-header {
+  background:var(--gd); padding:16px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.p-header-text .p-org   { color:rgba(255,255,255,.65); font-size:10px; }
+.p-header-text .p-title { color:var(--wh); font-size:18px; font-weight:800; line-height:1.3; }
+.p-header-text .p-sub   { color:var(--gl); font-size:10px; margin-top:2px; }
+.p-badge {
+  background:var(--gl); color:var(--gd); font-size:9px; font-weight:700;
+  padding:4px 12px; border-radius:20px; white-space:nowrap;
+}
+.p-badge.red-b { background:var(--rd); color:var(--wh); }
+.p-label-bar {
+  background:var(--gp); border-bottom:2px solid var(--gb);
+  padding:7px 24px; font-size:11px; color:var(--gd); font-weight:700;
+  display:flex; justify-content:space-between;
+}
+.p-label-bar span { color:var(--gm); font-weight:500; }
+.p-body { padding:20px 24px; }
+.p-footer {
+  background:var(--gd); padding:8px 24px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:9px; color:rgba(255,255,255,.55); margin-top:10px;
+}
+.p-footer strong { color:var(--wh); }
+
+/* Shared components */
+.sec-head { display:flex; align-items:center; gap:8px; margin:20px 0 12px; }
+.sec-head:first-child { margin-top:0; }
+.sec-bar  { width:4px; height:22px; background:var(--gd); border-radius:2px; flex-shrink:0; }
+.sec-head h2 { font-size:14px; font-weight:800; color:var(--gd); margin:0; }
+
+.kpi-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:10px; }
+.kpi-grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:10px; }
+.kpi-card {
+  background:var(--gl2); border:1px solid var(--gb); border-radius:10px;
+  padding:14px 10px; text-align:center; position:relative; overflow:hidden;
+}
+.kpi-card::before { content:''; position:absolute; top:0; right:0; left:0; height:3px; background:var(--ka,var(--gd)); }
+.kpi-icon  { font-size:22px; display:block; margin-bottom:5px; }
+.kpi-val   { font-size:26px; font-weight:900; color:var(--kc,var(--gd)); line-height:1; display:block; margin-bottom:4px; }
+.kpi-lbl   { font-size:11px; color:var(--gm2); font-weight:500; line-height:1.4; }
+.kpi-sub   { font-size:10px; color:var(--ka,var(--gd)); font-weight:600; margin-top:3px; display:block; }
+
+.note-box {
+  background:var(--gp); border-right:4px solid var(--gd);
+  border-radius:0 8px 8px 0; padding:10px 14px; font-size:11px; color:var(--gy); margin-top:10px;
+}
+.note-box.red-n  { background:var(--rl); border-right-color:var(--rd); }
+.note-box.amb-n  { background:var(--al); border-right-color:var(--am); }
+
+.data-table { width:100%; border-collapse:collapse; font-size:11px; }
+.data-table thead th {
+  background:var(--gd); color:var(--wh); padding:8px 10px;
+  font-weight:700; text-align:right; font-size:11px;
+}
+.data-table tbody tr:nth-child(even) { background:var(--gl2); }
+.data-table tbody tr:hover { background:var(--gp); }
+.data-table tbody td { padding:7px 10px; border-bottom:1px solid #E5E7EB; vertical-align:middle; }
+.data-table tfoot td { background:var(--gd); color:var(--wh); padding:8px 10px; font-weight:700; font-size:11px; }
+
+.badge {
+  display:inline-block; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:700;
+}
+.bg-rd { background:var(--rl); color:var(--rd); }
+.bg-am { background:var(--al); color:var(--am); }
+.bg-gn { background:var(--gp); color:var(--gd); }
+.bg-bl { background:var(--bll); color:var(--bl); }
+.bg-gy { background:var(--gl2); color:var(--gm2); }
+
+.bar-wrap { display:flex; align-items:center; gap:6px; }
+.bar-track { flex:1; height:8px; background:#E5E7EB; border-radius:4px; overflow:hidden; }
+.bar-fill  { height:100%; background:var(--gm); border-radius:4px; }
+.bar-pct   { font-size:10px; font-weight:700; min-width:36px; text-align:left; direction:ltr; }
+
+.two-col   { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.chart-box { background:var(--wh); border:1px solid var(--gb); border-radius:10px; padding:16px; }
+
+/* Priority cards */
+.pri-card { border:1px solid #E5E7EB; border-radius:10px; overflow:hidden; margin-bottom:8px; }
+.pri-hdr  { padding:9px 16px; font-size:12px; font-weight:700; }
+.pri-p1   { background:#FEF2F2; color:var(--rd); border-bottom:1px solid #FCA5A5; }
+.pri-p2   { background:var(--al); color:var(--am); border-bottom:1px solid #FCD34D; }
+.pri-p3   { background:var(--bll); color:var(--bl); border-bottom:1px solid #BAD7F5; }
+.pri-body { padding:10px 16px; font-size:11px; background:var(--wh); }
+.pri-row-hdr {
+  display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;
+  padding:4px 0 6px; color:var(--gm2); font-size:10px; font-weight:600;
+  border-bottom:1px solid #E5E7EB; margin-bottom:4px;
+}
+.pri-row {
+  display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;
+  padding:7px 0; border-bottom:1px dashed #E5E7EB; align-items:center;
+}
+.pri-row:last-child { border-bottom:none; }
+.pri-action { color:var(--gy); font-weight:500; }
+.pri-resp   { color:var(--bl); font-size:10px; }
+.pri-impact { color:var(--gd); font-weight:700; font-size:10px; }
+
+/* Cover page specific */
+.cover-page { display:flex; flex-direction:column; min-height:80vh; }
+.cover-hero {
+  flex:1; background:linear-gradient(165deg,#021a0e,#055934 50%,#021a0e);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:40px 32px; position:relative; overflow:hidden;
+}
+.cover-hero::before {
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(120deg,transparent,transparent 80px,rgba(255,255,255,.018) 80px,rgba(255,255,255,.018) 160px);
+}
+.cover-hero-inner { position:relative; z-index:1; }
+.cover-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(134,194,66,.12); border:1px solid rgba(134,194,66,.3);
+  border-radius:30px; padding:5px 16px; font-size:11px; color:var(--gl);
+  font-weight:700; letter-spacing:.6px; margin-bottom:22px;
+}
+.cover-tag span { width:6px; height:6px; border-radius:50%; background:var(--gl); }
+.cover-h1 { font-size:clamp(30px,4vw,52px); font-weight:900; color:var(--wh); line-height:1.2; margin-bottom:12px; }
+.cover-sub { font-size:15px; color:rgba(255,255,255,.75); margin-bottom:8px; }
+.cover-period-box {
+  display:inline-flex; align-items:center; gap:18px;
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+  border-radius:40px; padding:10px 26px; margin:22px 0 32px;
+}
+.cover-period-box .pi { text-align:center; }
+.cover-period-box .pv { font-size:13px; font-weight:800; color:var(--wh); }
+.cover-period-box .pl { font-size:9px; color:rgba(255,255,255,.5); }
+.cover-period-sep { width:1px; height:28px; background:rgba(255,255,255,.15); }
+.cover-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:600px; margin:0 auto; }
+.cover-kpi {
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+  border-top:3px solid var(--ck); border-radius:10px; padding:12px 8px; text-align:center;
+}
+.cover-kpi .ck-val { font-size:20px; font-weight:900; color:var(--ck); }
+.cover-kpi .ck-lbl { font-size:10px; color:rgba(255,255,255,.6); margin-top:4px; }
+
+/* Intro page specific */
+.scope-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.scope-card {
+  background:var(--wh); border:1px solid var(--gb); border-radius:10px; padding:12px 14px;
+  display:flex; gap:12px;
+}
+.scope-card .sc-ico { font-size:22px; flex-shrink:0; }
+.scope-card .sc-t   { font-size:12px; font-weight:700; color:var(--gd); margin-bottom:4px; }
+.scope-card .sc-d   { font-size:11px; color:var(--gm2); line-height:1.6; }
+.finding-row {
+  background:var(--gp); border-right:4px solid var(--gd);
+  border-radius:0 8px 8px 0; padding:8px 14px; font-size:11px; color:var(--gy);
+  display:flex; gap:10px; align-items:flex-start; margin-bottom:7px;
+}
+.finding-row.rd-f { background:var(--rl); border-right-color:var(--rd); }
+.finding-row.am-f { background:var(--al); border-right-color:var(--am); }
+.finding-row.bl-f { background:var(--bll); border-right-color:var(--bl); }
+.toc-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.toc-item {
+  background:var(--gl2); border-radius:8px; padding:10px 8px; text-align:center;
+  border:1px solid var(--gb); border-top:3px solid var(--gd);
+}
+.toc-num  { font-size:11px; font-weight:800; color:var(--gd); margin-bottom:4px; }
+.toc-ico  { font-size:18px; margin-bottom:4px; }
+.toc-name { font-size:10px; color:var(--gm2); }
+
+/* Svc item */
+.svc-item { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #E5E7EB; font-size:11px; }
+.svc-item:last-child { border-bottom:none; }
+.svc-rank {
+  width:20px; height:20px; border-radius:50%; background:var(--gd);
+  color:var(--wh); font-size:9px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.svc-name  { flex:1; color:var(--gy); }
+.svc-count { font-weight:700; min-width:30px; text-align:center; }
+.svc-bar   { width:70px; }
+
+/* Room cards */
+.room-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.room-card {
+  background:var(--wh); border:1px solid var(--gb); border-top:3px solid var(--gm);
+  border-radius:8px; padding:10px 12px;
+}
+.room-card.warn { border-color:var(--am); border-top-color:var(--am); }
+.room-card .rc-name { font-size:12px; font-weight:500; color:var(--gy); margin-bottom:6px; }
+.room-card.warn .rc-name { color:var(--am); font-weight:700; }
+.room-card .rc-bar { height:6px; background:var(--gb); border-radius:3px; overflow:hidden; margin-bottom:5px; }
+.room-card .rc-fill { height:100%; background:var(--gm); border-radius:3px; }
+.room-card.warn .rc-fill { background:var(--am); }
+.room-card .rc-vals { display:flex; justify-content:space-between; }
+.room-card .rc-num { font-weight:800; color:var(--gd); font-size:14px; }
+.room-card .rc-pct { font-size:10px; color:var(--gm2); }
+
+/* Signature blocks */
+.sig-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-top:16px; font-size:10px; color:var(--gm2); }
+.sig-item { text-align:center; }
+.sig-item .sig-line { border-top:1px solid #E5E7EB; padding-top:4px; margin-top:24px; }
+
+/* Animations */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(24px)}  to{opacity:1;transform:translateY(0)} }
+
+/* Responsive */
+@media(max-width:700px){
+  :root { --sidebar:0px; }
+  .r-sidebar { display:none; }
+  .kpi-grid,.kpi-grid3,.stats-grid { grid-template-columns:repeat(2,1fr); }
+  .stats-grid-2,.two-col,.three-col,.scope-grid,.room-grid,.cover-kpis { grid-template-columns:1fr 1fr; }
+  .toc-grid { grid-template-columns:repeat(3,1fr); }
+  .info-grid { grid-template-columns:1fr; }
+  .cover-h1,.hero-h1 { font-size:30px; }
+  .cta-hero { min-width:90%; }
+  .navbar,.hero-logos { flex-direction:column; gap:10px; }
+}
+</style>
+</head>
+<body>
+
+<!--════════════════════════════════════════════
+  LANDING VIEW
+════════════════════════════════════════════-->
+<div id="view-landing">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-dept">
+      الإدارة العامة للخدمات التعليمية
+      <small>General Administration of Educational Services</small>
+    </div>
+    <div class="nav-center">
+      <div class="nav-shield">جامعة<br>الملك<br>عبدالعزيز</div>
+      <div class="nav-kau-lbl">جامعة الملك<br>عبدالعزيز</div>
+    </div>
+    <button class="nav-menu" aria-label="القائمة">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-logos">
+        <div class="logo-block">
+          <div>
+            <div class="logo-ar">الإدارة العامة للخدمات التعليمية</div>
+            <div class="logo-en">General Administration of Educational Services</div>
+          </div>
+        </div>
+        <div class="logo-block" style="flex-direction:row-reverse;">
+          <div style="text-align:center">
+            <div class="logo-ar">جامعة الملك عبدالعزيز</div>
+            <div class="logo-en">KING ABDULAZIZ UNIVERSITY</div>
+          </div>
+          <div class="shield-lg">جامعة<br>الملك<br>عبدالعزيز</div>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div>
+          <div class="eyebrow-text">STATISTICAL REPORT</div>
+          <div class="eyebrow-line"></div>
+        </div>
+        <h1 class="hero-h1">التقرير الإحصائي<br>لطلبات نظام إتمام</h1>
+        <p class="hero-sub">قطاع اللوجستيات وسلاسل الإمداد</p>
+        <p class="hero-period">للفترة: يناير — مايو ٢٠٢٦ م</p>
+        <button class="cta-hero" onclick="openReport()">
+          ابدأ استعراض التقرير <span class="arr">›</span>
+        </button>
+      </div>
+
+      <div class="scroll-hint" onclick="document.getElementById('stats').scrollIntoView({behavior:'smooth'})">
+        <div class="scroll-mouse"></div>
+        <span>مرر للأسفل</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-section" id="stats">
+    <div class="stats-hdr">
+      <h2>أبرز مؤشرات الأداء</h2>
+      <p>تحليل شامل لـ 2,024 طلب خدمة خلال 5 أشهر</p>
+      <div class="stats-divider"></div>
+    </div>
+    <div class="stats-grid">
+      <div class="s-card" style="--ca:#055934" data-delay="0">
+        <span class="s-icon">📋</span>
+        <span class="s-num" style="color:#055934" data-count="2024">٠</span>
+        <div class="s-lbl">إجمالي الطلبات المسجّلة</div>
+        <span class="s-sub" style="color:#208D44">منذ بداية التسجيل</span>
+      </div>
+      <div class="s-card" style="--ca:#208D44" data-delay="120">
+        <span class="s-icon">✅</span>
+        <span class="s-num" style="color:#208D44" data-count="1365">٠</span>
+        <div class="s-lbl">طلباً مُنجزاً</div>
+        <span class="s-sub" style="color:#208D44">نسبة الإنجاز 67.4%</span>
+      </div>
+      <div class="s-card" style="--ca:#C0392B" data-delay="240">
+        <span class="s-icon">❌</span>
+        <span class="s-num" style="color:#C0392B" data-count="310">٠</span>
+        <div class="s-lbl">طلباً مرفوضاً</div>
+        <span class="s-sub" style="color:#C0392B">15.3% من الإجمالي</span>
+      </div>
+      <div class="s-card" style="--ca:#E67E22" data-delay="360">
+        <span class="s-icon">⏳</span>
+        <span class="s-num" style="color:#E67E22" data-count="148">٠</span>
+        <div class="s-lbl">طلباً قيد التنفيذ</div>
+        <span class="s-sub" style="color:#E67E22">7.3% — بانتظار إجراء</span>
+      </div>
+    </div>
+    <div class="stats-grid-2">
+      <div class="s-card" style="--ca:#86C242" data-delay="480">
+        <span class="s-icon">🔧</span>
+        <span class="s-num" style="color:#86C242" data-count="977">٠</span>
+        <div class="s-lbl">طلب صيانة — 48.3%</div>
+      </div>
+      <div class="s-card" style="--ca:#1A6FAF" data-delay="600">
+        <span class="s-icon">🔍</span>
+        <span class="s-num" style="color:#1A6FAF" data-count="758">٠</span>
+        <div class="s-lbl">طلب فحص — 37.5%</div>
+      </div>
+      <div class="s-card" style="--ca:#055934" data-delay="720">
+        <span class="s-icon">📅</span>
+        <span class="s-num" style="color:#055934" data-count="101">٠</span>
+        <div class="s-lbl">أعلى رقم شهري — مايو ٢٠٢٦</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info -->
+  <section class="info-sec">
+    <h2>نبذة عن التقرير</h2>
+    <p>يُقدّم هذا التقرير تحليلاً إحصائياً شاملاً لطلبات الخدمة المسجّلة عبر نظام إتمام خلال الفترة من يناير إلى مايو ٢٠٢٦، ويشمل مؤشرات الأداء والتوزيع الشهري وتحليل أسباب الرفض وخطة المعالجة.</p>
+    <div class="info-grid">
+      <div class="info-item"><i>📊</i><b>٦ صفحات تحليلية</b><p>مؤشرات الأداء · الاتجاه الشهري · توزيع الجهات · الأجهزة · تحليل الرفض · خطة العمل</p></div>
+      <div class="info-item"><i>🗄️</i><b>مصدر البيانات</b><p>نظام إتمام الجامعي — 17 ورقة بيانات تغطي جميع أقسام الخدمات التعليمية</p></div>
+      <div class="info-item"><i>🎯</i><b>الهدف</b><p>رفع كفاءة معالجة الطلبات وتخفيض نسبة الرفض من 15.3% إلى أقل من 8%</p></div>
+    </div>
+  </section>
+  <footer class="site-footer">
+    <span><strong>جامعة الملك عبدالعزيز</strong> — الإدارة العامة للخدمات التعليمية</span>
+    <span>قطاع اللوجستيات وسلاسل الإمداد · تقرير داخلي · © ٢٠٢٦</span>
+    <span>٤ يونيو ٢٠٢٦</span>
+  </footer>
+</div>
+
+<!--════════════════════════════════════════════
+  REPORT VIEW
+════════════════════════════════════════════-->
+<div id="view-report">
+
+  <!-- Report top bar -->
+  <div class="r-topbar">
+    <div class="r-topbar-brand">
+      <div class="r-shield">جامعة<br>الملك<br>عبدالعزيز</div>
+      <div>
+        <div class="r-title">التقرير الإحصائي — نظام إتمام</div>
+        <div class="r-sub">يناير – مايو ٢٠٢٦ · الإدارة العامة للخدمات التعليمية</div>
+      </div>
+    </div>
+    <div class="r-nav-pages" id="pageDots"></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="r-home-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="r-nav-arrows">
+        <button class="r-arr-btn prev" id="btnPrev" onclick="movePage(-1)">▶ السابق</button>
+        <button class="r-arr-btn next" id="btnNext" onclick="movePage(1)">التالي ◀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout -->
+  <div class="r-layout">
+
+    <!-- Sidebar -->
+    <aside class="r-sidebar">
+      <div class="r-sidebar-hdr">
+        <b>التقرير الإحصائي</b>
+        نظام إتمام · يناير – مايو ٢٠٢٦
+      </div>
+      <nav class="r-sidebar-nav" id="sidebarNav"></nav>
+      <div class="r-sidebar-foot">جامعة الملك عبدالعزيز<br>الإدارة العامة للخدمات التعليمية<br>© ٢٠٢٦</div>
+    </aside>
+
+    <!-- Pages -->
+    <main class="r-main">
+
+      <!-- ╔══ PAGE 0: COVER ══╗ -->
+      <div class="r-page" data-page="0">
+        <div class="cover-page">
+          <div class="cover-hero">
+            <div class="cover-hero-inner">
+              <div class="cover-tag"><span></span>تقرير داخلي — للاستخدام الرسمي</div>
+              <h1 class="cover-h1">التقرير الإحصائي<br>لطلبات نظام إتمام</h1>
+              <p class="cover-sub">المؤشرات الرئيسية · التحليل التشغيلي · خطة العمل</p>
+              <div class="cover-period-box">
+                <div class="pi"><div class="pv">يناير</div><div class="pl">بداية الفترة</div></div>
+                <div class="cover-period-sep"></div>
+                <div class="pi"><div class="pv">مايو ٢٠٢٦</div><div class="pl">نهاية الفترة</div></div>
+                <div class="cover-period-sep"></div>
+                <div class="pi"><div class="pv">٥ أشهر</div><div class="pl">فترة التحليل</div></div>
+                <div class="cover-period-sep"></div>
+                <div class="pi"><div class="pv">2,024</div><div class="pl">إجمالي الطلبات</div></div>
+              </div>
+              <div class="cover-kpis">
+                <div class="cover-kpi" style="--ck:#86C242"><div class="ck-val">67.4%</div><div class="ck-lbl">نسبة الإنجاز</div></div>
+                <div class="cover-kpi" style="--ck:#F87171"><div class="ck-val">15.3%</div><div class="ck-lbl">نسبة الرفض</div></div>
+                <div class="cover-kpi" style="--ck:#FBBF24"><div class="ck-val">7.3%</div><div class="ck-lbl">قيد التنفيذ</div></div>
+                <div class="cover-kpi" style="--ck:#60A5FA"><div class="ck-val">9.9%</div><div class="ck-lbl">مُعاد التوجيه</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="background:#021a0d;padding:12px 24px;display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.45);">
+            <strong style="color:rgba(255,255,255,.7)">جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong>
+            <span>تصنيف: داخلي · غير مخصص للتداول الخارجي · © ٢٠٢٦</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ╔══ PAGE 1: INTRO ══╗ -->
+      <div class="r-page" data-page="1">
+        <div class="p-header">
+          <div class="p-header-text">
+            <div class="p-org">جامعة الملك عبدالعزيز — الإدارة العامة للخدمات التعليمية</div>
+            <div class="p-title">التقرير الإحصائي لطلبات نظام إتمام</div>
+            <div class="p-sub">المقدمة التنفيذية · السياق والمنهجية والنتائج الرئيسية</div>
+          </div>
+          <div class="p-badge">يناير – مايو ٢٠٢٦</div>
+        </div>
+        <div class="p-label-bar"><span>الصفحة ١ — المقدمة التنفيذية</span><span>تاريخ التقرير: ٤ يونيو ٢٠٢٦ · تصنيف: داخلي</span></div>
+        <div class="p-body">
+          <div class="sec-head"><div class="sec-bar"></div><h2>أولاً: عن هذا التقرير</h2></div>
+          <div style="background:var(--wh);border:1px solid var(--gb);border-radius:10px;padding:14px 18px;font-size:12px;color:var(--gy);line-height:2;">
+            <p>يُقدّم هذا التقرير تحليلاً إحصائياً شاملاً لطلبات الخدمة المسجّلة عبر <strong style="color:var(--gd)">نظام إتمام</strong> خلال الفترة الممتدة من <strong style="color:var(--gd)">يناير إلى مايو ٢٠٢٦</strong>، والتي تشمل طلبات الصيانة والفحص والتأمين المقدّمة من مختلف كليات وأقسام جامعة الملك عبدالعزيز.</p>
+            <p style="margin-top:8px">يهدف التقرير إلى رصد مؤشرات الأداء، وتشخيص نقاط الضعف التشغيلية، وتقديم توصيات قابلة للتنفيذ بهدف رفع كفاءة معالجة الطلبات وتخفيض نسب الرفض.</p>
+          </div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>ثانياً: نطاق التقرير ومصادر البيانات</h2></div>
+          <div class="scope-grid">
+            <div class="scope-card"><div class="sc-ico">🗄️</div><div><div class="sc-t">المصدر</div><div class="sc-d">بيانات نظام إتمام (17 ورقة بيانات) — قاعدة البيانات الرسمية لطلبات الخدمة</div></div></div>
+            <div class="scope-card"><div class="sc-ico">📅</div><div><div class="sc-t">الفترة</div><div class="sc-d">يناير – مايو ٢٠٢٦ (5 أشهر) — إجمالي 395 طلباً في الفترة المرصودة شهرياً</div></div></div>
+            <div class="scope-card"><div class="sc-ico">🏛️</div><div><div class="sc-t">الجهات</div><div class="sc-d">أكثر من 10 كليات وإدارات جامعية — موزّعة على مباني ومعامل متعددة</div></div></div>
+            <div class="scope-card"><div class="sc-ico">📊</div><div><div class="sc-t">المنهجية</div><div class="sc-d">تصنيف آلي لخانة خاتم الرفض + تحليل محتوى خانة الملاحظات لتحديد الأسباب</div></div></div>
+          </div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>ثالثاً: أبرز النتائج</h2></div>
+          <div class="finding-row">    <span>✅</span><span>نسبة الإنجاز بلغت <strong>67.4%</strong> (1,365 طلباً) من إجمالي 2,024 — مؤشر إيجابي يعكس كفاءة تشغيلية مقبولة.</span></div>
+          <div class="finding-row rd-f"><span>❌</span><span>نسبة الرفض بلغت <strong>15.3%</strong> (310 طلباً) — يمكن تخفيضها بأكثر من 50% بمعالجة الأسباب الجذرية.</span></div>
+          <div class="finding-row am-f"><span>📈</span><span>مايو سجّل أعلى معدل شهري (<strong>101 طلب</strong>) بزيادة 29.5% عن يناير — مؤشر على تصاعد الطلب.</span></div>
+          <div class="finding-row bl-f"><span>🏛️</span><span>الإدارة العامة وكلية العلوم تستأثران بـ<strong>45%</strong> من الطلبات — تركيز الموارد عليهما أولوية قصوى.</span></div>
+          <div class="finding-row">    <span>💡</span><span>السبب الأبرز للرفض: بيانات ناقصة/خاطئة (<strong>29%</strong>) — معظمها قابل للمعالجة بدليل إرشادي وتوعية.</span></div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>رابعاً: هيكل التقرير</h2></div>
+          <div class="toc-grid">
+            <div class="toc-item"><div class="toc-num">صفحة ١</div><div class="toc-ico">📊</div><div class="toc-name">مؤشرات الأداء</div></div>
+            <div class="toc-item"><div class="toc-num">صفحة ٢</div><div class="toc-ico">📅</div><div class="toc-name">الاتجاه الشهري</div></div>
+            <div class="toc-item"><div class="toc-num">صفحة ٣</div><div class="toc-ico">🏛️</div><div class="toc-name">الجهات والبيئات</div></div>
+            <div class="toc-item"><div class="toc-num">صفحة ٤</div><div class="toc-ico">🔧</div><div class="toc-name">الأجهزة</div></div>
+            <div class="toc-item"><div class="toc-num">صفحة ٥</div><div class="toc-ico">❌</div><div class="toc-name">تحليل الرفض</div></div>
+          </div>
+        </div>
+        <div class="p-footer"><strong>جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong><span>قطاع اللوجستيات وسلاسل الإمداد · صفحة ١ من ٦ · © ٢٠٢٦</span></div>
+      </div>
+
+      <!-- ╔══ PAGE 2: KPIs ══╗ -->
+      <div class="r-page" data-page="2">
+        <div class="p-header">
+          <div class="p-header-text">
+            <div class="p-org">جامعة الملك عبدالعزيز — الإدارة العامة للخدمات التعليمية</div>
+            <div class="p-title">التقرير الإحصائي لطلبات نظام إتمام</div>
+            <div class="p-sub">المؤشرات الرئيسية · حالة الطلبات · توزيع أنواع الخدمات</div>
+          </div>
+          <div class="p-badge">يناير – مايو ٢٠٢٦</div>
+        </div>
+        <div class="p-label-bar"><span>الصفحة ٢ — مؤشرات الأداء الرئيسية</span><span>تاريخ التقرير: ٤ يونيو ٢٠٢٦</span></div>
+        <div class="p-body">
+          <div class="sec-head"><div class="sec-bar"></div><h2>أولاً: مؤشرات الأداء الرئيسية</h2></div>
+          <div class="kpi-grid">
+            <div class="kpi-card" style="--ka:#055934"><span class="kpi-icon">📋</span><span class="kpi-val">2,024</span><div class="kpi-lbl">إجمالي الطلبات المسجّلة</div><span class="kpi-sub">منذ بداية التسجيل</span></div>
+            <div class="kpi-card" style="--ka:#208D44;--kc:#208D44"><span class="kpi-icon">✅</span><span class="kpi-val">1,365</span><div class="kpi-lbl">طلبات مُنجزة</div><span class="kpi-sub">نسبة الإنجاز 67.4%</span></div>
+            <div class="kpi-card" style="--ka:#C0392B;--kc:#C0392B"><span class="kpi-icon">❌</span><span class="kpi-val">310</span><div class="kpi-lbl">طلبات مرفوضة</div><span class="kpi-sub">15.3% من الإجمالي</span></div>
+            <div class="kpi-card" style="--ka:#E67E22;--kc:#E67E22"><span class="kpi-icon">⏳</span><span class="kpi-val">148</span><div class="kpi-lbl">قيد التنفيذ</div><span class="kpi-sub">7.3% — بانتظار إجراء</span></div>
+          </div>
+          <div class="kpi-grid" style="margin-top:0">
+            <div class="kpi-card" style="--ka:#86C242"><span class="kpi-icon">🔧</span><span class="kpi-val">977</span><div class="kpi-lbl">طلبات الصيانة</div><span class="kpi-sub">48.3% من الإجمالي</span></div>
+            <div class="kpi-card" style="--ka:#1A6FAF;--kc:#1A6FAF"><span class="kpi-icon">🔍</span><span class="kpi-val">758</span><div class="kpi-lbl">طلبات الفحص</div><span class="kpi-sub">37.5% من الإجمالي</span></div>
+            <div class="kpi-card" style="--ka:#055934"><span class="kpi-icon">📦</span><span class="kpi-val">273</span><div class="kpi-lbl">طلبات التأمين</div><span class="kpi-sub">13.5% من الإجمالي</span></div>
+            <div class="kpi-card" style="--ka:#208D44;--kc:#208D44"><span class="kpi-icon">🔄</span><span class="kpi-val">201</span><div class="kpi-lbl">مُعاد التوجيه</div><span class="kpi-sub">9.9% من الإجمالي</span></div>
+          </div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>ثانياً: توزيع حالات الطلبات ونوع الخدمة</h2></div>
+          <div class="two-col">
+            <div>
+              <table class="data-table" style="margin-bottom:10px;">
+                <thead><tr><th>حالة الطلب</th><th style="width:65px">العدد</th><th style="width:55px">النسبة</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="badge bg-gn">✅ تم الإنجاز</span></td><td><strong>1,365</strong></td><td>67.4%</td></tr>
+                  <tr><td><span class="badge bg-rd">❌ مرفوض</span></td><td><strong>310</strong></td><td>15.3%</td></tr>
+                  <tr><td><span class="badge bg-bl">↩️ مُعاد التوجيه</span></td><td><strong>201</strong></td><td>9.9%</td></tr>
+                  <tr><td><span class="badge bg-am">⏳ قيد التنفيذ</span></td><td><strong>148</strong></td><td>7.3%</td></tr>
+                </tbody>
+                <tfoot><tr><td><strong>الإجمالي</strong></td><td><strong>2,024</strong></td><td>100%</td></tr></tfoot>
+              </table>
+              <div class="note-box red-n">⚠️ الطلبات المرفوضة <strong>310 (15.3%)</strong> قابلة للتخفيض — راجع صفحة تحليل الرفض.</div>
+            </div>
+            <div class="chart-box">
+              <div style="font-size:12px;font-weight:700;color:var(--gd);margin-bottom:10px">توزيع أنواع الخدمات</div>
+              <canvas id="chartStatus" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="p-footer"><strong>جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong><span>قطاع اللوجستيات وسلاسل الإمداد · صفحة ٢ من ٦ · © ٢٠٢٦</span></div>
+      </div>
+
+      <!-- ╔══ PAGE 3: MONTHLY ══╗ -->
+      <div class="r-page" data-page="3">
+        <div class="p-header">
+          <div class="p-header-text">
+            <div class="p-org">جامعة الملك عبدالعزيز — الإدارة العامة للخدمات التعليمية</div>
+            <div class="p-title">التقرير الإحصائي لطلبات نظام إتمام</div>
+            <div class="p-sub">التوزيع الشهري للطلبات · الاتجاهات والتغييرات الشهرية</div>
+          </div>
+          <div class="p-badge">يناير – مايو ٢٠٢٦</div>
+        </div>
+        <div class="p-label-bar"><span>الصفحة ٣ — الاتجاه الشهري للطلبات</span><span>تاريخ التقرير: ٤ يونيو ٢٠٢٦</span></div>
+        <div class="p-body">
+          <div class="sec-head"><div class="sec-bar"></div><h2>التوزيع الشهري للطلبات (يناير – مايو ٢٠٢٦)</h2></div>
+          <div class="chart-box" style="margin-bottom:16px"><canvas id="chartMonthly" height="180"></canvas></div>
+          <div style="text-align:center;font-size:11px;color:var(--gm2);margin-bottom:14px">
+            الإجمالي: <strong style="color:var(--gd)">395 طلباً</strong> خلال الفترة · مايو سجّل الأعلى بزيادة <strong style="color:var(--gd)">▲ 29.5%</strong> عن يناير
+          </div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>الجدول التفصيلي</h2></div>
+          <table class="data-table" style="margin-bottom:14px">
+            <thead><tr><th>الشهر</th><th style="width:80px">عدد الطلبات</th><th style="width:130px">التغيير عن الشهر السابق</th><th style="width:70px">نسبة من الإجمالي</th><th>التوزيع البياني</th></tr></thead>
+            <tbody>
+              <tr><td>يناير</td><td><strong>78</strong></td><td style="color:var(--gm2)">—</td><td>19.7%</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:77%"></div></div><span class="bar-pct">19.7%</span></div></td></tr>
+              <tr><td>فبراير</td><td><strong>56</strong></td><td style="color:var(--rd)">▼ 28.2%</td><td>14.2%</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--rd)"></div></div><span class="bar-pct">14.2%</span></div></td></tr>
+              <tr><td>مارس</td><td><strong>77</strong></td><td style="color:var(--gm)">▲ 37.5%</td><td>19.5%</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:76%"></div></div><span class="bar-pct">19.5%</span></div></td></tr>
+              <tr><td>أبريل</td><td><strong>83</strong></td><td style="color:var(--gm)">▲ 7.8%</td><td>21.0%</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div><span class="bar-pct">21.0%</span></div></td></tr>
+              <tr style="background:var(--gp)"><td><strong>مايو</strong> <span class="badge bg-gn" style="font-size:9px">الأعلى</span></td><td><strong style="color:var(--gd);font-size:14px">101</strong></td><td style="color:var(--gm)">▲ 21.7%</td><td>25.6%</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--gd)"></div></div><span class="bar-pct">25.6%</span></div></td></tr>
+            </tbody>
+            <tfoot><tr><td><strong>الإجمالي</strong></td><td><strong>395</strong></td><td colspan="3">إجمالي الفترة المرصودة (يناير – مايو ٢٠٢٦)</td></tr></tfoot>
+          </table>
+          <div class="two-col">
+            <div class="note-box amb-n">⚠️ <strong>فبراير</strong> سجّل أدنى معدل (56 طلباً) بانخفاض 28.2% — يُرجّح تأثير الإجازات والعطل الرسمية.</div>
+            <div class="note-box">📈 الاتجاه العام <strong>تصاعدي</strong> — يُوصى بزيادة طاقة الفريق التشغيلي استعداداً للفصل الثاني.</div>
+          </div>
+        </div>
+        <div class="p-footer"><strong>جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong><span>قطاع اللوجستيات وسلاسل الإمداد · صفحة ٣ من ٦ · © ٢٠٢٦</span></div>
+      </div>
+
+      <!-- ╔══ PAGE 4: ENTITIES ══╗ -->
+      <div class="r-page" data-page="4">
+        <div class="p-header">
+          <div class="p-header-text">
+            <div class="p-org">جامعة الملك عبدالعزيز — الإدارة العامة للخدمات التعليمية</div>
+            <div class="p-title">التقرير الإحصائي لطلبات نظام إتمام</div>
+            <div class="p-sub">توزيع الطلبات حسب الجهة · بيئة العمل والغرف</div>
+          </div>
+          <div class="p-badge">يناير – مايو ٢٠٢٦</div>
+        </div>
+        <div class="p-label-bar"><span>الصفحة ٤ — الجهات وبيئات العمل</span><span>تاريخ التقرير: ٤ يونيو ٢٠٢٦</span></div>
+        <div class="p-body">
+          <div class="sec-head"><div class="sec-bar"></div><h2>أولاً: توزيع الطلبات حسب الجهة — أعلى ١٠ جهات</h2></div>
+          <div class="chart-box" style="margin-bottom:12px"><canvas id="chartEntities" height="220"></canvas></div>
+          <div class="note-box" style="margin-bottom:14px">ℹ️ الإدارة العامة وكلية العلوم تستحوذان على <strong style="color:var(--gd)">45%</strong> من إجمالي الطلبات — تركيز الموارد عليهما أولوية قصوى.</div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>ثانياً: توزيع الطلبات حسب نوع الغرفة / بيئة العمل</h2></div>
+          <div class="room-grid">
+            <div class="room-card"><div class="rc-name">مكتب</div><div class="rc-bar"><div class="rc-fill" style="width:100%"></div></div><div class="rc-vals"><span class="rc-num">595</span><span class="rc-pct">29.4%</span></div></div>
+            <div class="room-card"><div class="rc-name">فصل دراسي</div><div class="rc-bar"><div class="rc-fill" style="width:92%"></div></div><div class="rc-vals"><span class="rc-num">548</span><span class="rc-pct">27.1%</span></div></div>
+            <div class="room-card warn"><div class="rc-name">غير محدد ⚠️</div><div class="rc-bar"><div class="rc-fill" style="width:65%"></div></div><div class="rc-vals"><span class="rc-num" style="color:var(--am)">386</span><span class="rc-pct">19.1%</span></div></div>
+            <div class="room-card"><div class="rc-name">معمل حاسب</div><div class="rc-bar"><div class="rc-fill" style="width:26%"></div></div><div class="rc-vals"><span class="rc-num">153</span><span class="rc-pct">7.6%</span></div></div>
+            <div class="room-card"><div class="rc-name">مختبر</div><div class="rc-bar"><div class="rc-fill" style="width:24%"></div></div><div class="rc-vals"><span class="rc-num">142</span><span class="rc-pct">7.0%</span></div></div>
+            <div class="room-card"><div class="rc-name">أخرى</div><div class="rc-bar"><div class="rc-fill" style="width:16%"></div></div><div class="rc-vals"><span class="rc-num">98</span><span class="rc-pct">4.8%</span></div></div>
+            <div class="room-card"><div class="rc-name">ورشة</div><div class="rc-bar"><div class="rc-fill" style="width:4%"></div></div><div class="rc-vals"><span class="rc-num">22</span><span class="rc-pct">1.1%</span></div></div>
+            <div class="room-card"><div class="rc-name">غرفة اجتماع</div><div class="rc-bar"><div class="rc-fill" style="width:3%"></div></div><div class="rc-vals"><span class="rc-num">16</span><span class="rc-pct">0.8%</span></div></div>
+          </div>
+          <div class="note-box amb-n">⚠️ <strong>386 طلباً (19.1%)</strong> بدون تحديد نوع الغرفة — يستوجب إلزام مقدمي الطلبات بتحديد بيئة العمل لتحسين جودة البيانات.</div>
+        </div>
+        <div class="p-footer"><strong>جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong><span>قطاع اللوجستيات وسلاسل الإمداد · صفحة ٤ من ٦ · © ٢٠٢٦</span></div>
+      </div>
+
+      <!-- ╔══ PAGE 5: DEVICES ══╗ -->
+      <div class="r-page" data-page="5">
+        <div class="p-header">
+          <div class="p-header-text">
+            <div class="p-org">جامعة الملك عبدالعزيز — الإدارة العامة للخدمات التعليمية</div>
+            <div class="p-title">التقرير الإحصائي لطلبات نظام إتمام</div>
+            <div class="p-sub">توزيع الطلبات حسب المستلزم والجهاز · الملاحظات التشغيلية</div>
+          </div>
+          <div class="p-badge">يناير – مايو ٢٠٢٦</div>
+        </div>
+        <div class="p-label-bar"><span>الصفحة ٥ — الأجهزة والمستلزمات</span><span>تاريخ التقرير: ٤ يونيو ٢٠٢٦</span></div>
+        <div class="p-body">
+          <div class="sec-head"><div class="sec-bar"></div><h2>أولاً: توزيع الطلبات حسب نوع المستلزم / الجهاز</h2></div>
+          <div class="two-col" style="margin-bottom:14px">
+            <div class="chart-box"><canvas id="chartDevices" height="220"></canvas></div>
+            <div>
+              <table class="data-table">
+                <thead><tr><th>نوع المستلزم</th><th style="width:60px">العدد</th><th style="width:55px">النسبة</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>حاسب آلي</strong></td><td><strong>392</strong></td><td>28.1%</td></tr>
+                  <tr><td><strong>بروجكتر</strong></td><td><strong>230</strong></td><td>16.5%</td></tr>
+                  <tr><td><strong>حبر طابعة</strong></td><td><strong>176</strong></td><td>12.6%</td></tr>
+                  <tr><td>شاشة</td><td>94</td><td>6.7%</td></tr>
+                  <tr><td>طابعة</td><td>85</td><td>6.1%</td></tr>
+                  <tr><td>كرسي</td><td>83</td><td>5.9%</td></tr>
+                  <tr><td>طاولة</td><td>70</td><td>5.0%</td></tr>
+                  <tr><td>أثاث</td><td>46</td><td>3.3%</td></tr>
+                  <tr><td>ماسح ضوئي</td><td>34</td><td>2.4%</td></tr>
+                  <tr><td>أجهزة أخرى</td><td>186</td><td>13.3%</td></tr>
+                </tbody>
+                <tfoot><tr><td><strong>الإجمالي</strong></td><td><strong>1,396</strong></td><td>100%</td></tr></tfoot>
+              </table>
+            </div>
+          </div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>ثانياً: أبرز الملاحظات التشغيلية</h2></div>
+          <div class="note-box" style="margin-bottom:7px">● الحاسب الآلي والبروجكتر يشكلان <strong>44.6%</strong> من الطلبات — يستوجب تكثيف الصيانة الوقائية لتخفيض الأعطال.</div>
+          <div class="note-box red-n" style="margin-bottom:7px">● طلبات الرفض بلغت <strong>15.3% (310 طلب)</strong> — يُنصح بمراجعة أسباب الرفض وتوعية مقدمي الطلبات.</div>
+          <div class="note-box amb-n" style="margin-bottom:7px">● مايو سجّل أعلى معدل طلبات <strong>(101 طلب)</strong> بزيادة 21.7% عن أبريل — يستوجب الاستعداد للارتفاع المستمر.</div>
+          <div class="note-box">● فحص الحاسب يمثّل <strong>92 طلباً قيد التنفيذ</strong> — يستلزم متابعة عاجلة لتخفيض التراكم.</div>
+        </div>
+        <div class="p-footer"><strong>جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong><span>قطاع اللوجستيات وسلاسل الإمداد · صفحة ٥ من ٦ · © ٢٠٢٦</span></div>
+      </div>
+
+      <!-- ╔══ PAGE 6: REJECTIONS ══╗ -->
+      <div class="r-page" data-page="6">
+        <div class="p-header">
+          <div class="p-header-text">
+            <div class="p-org">جامعة الملك عبدالعزيز — الإدارة العامة للخدمات التعليمية</div>
+            <div class="p-title">تحليل الطلبات المرفوضة — تقرير تفصيلي للإدارة</div>
+            <div class="p-sub">أسباب الرفض · التوزيع حسب الخدمة · خطة العمل والتوصيات</div>
+          </div>
+          <div class="p-badge red-b">٣١٠ طلباً مرفوضاً</div>
+        </div>
+        <div class="p-label-bar" style="background:var(--rl);border-bottom-color:var(--rd)33"><span style="color:var(--rd)">الصفحة ٦ — تحليل الطلبات المرفوضة وخطة معالجتها</span><span>الفترة: يناير – مايو ٢٠٢٦</span></div>
+        <div class="p-body">
+          <div class="sec-head"><div class="sec-bar"></div><h2>أولاً: الملخص التنفيذي للطلبات المرفوضة</h2></div>
+          <div class="kpi-grid" style="margin-bottom:16px">
+            <div class="kpi-card" style="--ka:#C0392B;--kc:#C0392B"><span class="kpi-icon">❌</span><span class="kpi-val">310</span><div class="kpi-lbl">إجمالي المرفوضة</div><span class="kpi-sub">15.3% من 2,024 طلب</span></div>
+            <div class="kpi-card" style="--ka:#E67E22;--kc:#E67E22"><span class="kpi-icon">🏷️</span><span class="kpi-val">16</span><div class="kpi-lbl">خدمات متأثرة</div><span class="kpi-sub">من أصل 17 خدمة</span></div>
+            <div class="kpi-card" style="--ka:#C0392B;--kc:#C0392B"><span class="kpi-icon">📊</span><span class="kpi-val">43</span><div class="kpi-lbl">أعلى خدمة رفضاً</div><span class="kpi-sub">فحص الحاسب الآلي</span></div>
+            <div class="kpi-card" style="--ka:#055934"><span class="kpi-icon">💡</span><span class="kpi-val">29%</span><div class="kpi-lbl">السبب الأبرز</div><span class="kpi-sub">بيانات ناقصة / خاطئة</span></div>
+          </div>
+          <div class="two-col" style="margin-bottom:14px">
+            <div class="chart-box"><div style="font-size:12px;font-weight:700;color:var(--gd);margin-bottom:8px">أسباب الرفض</div><canvas id="chartRejReasons" height="200"></canvas></div>
+            <div class="chart-box"><div style="font-size:12px;font-weight:700;color:var(--gd);margin-bottom:8px">الرفض حسب الخدمة</div><canvas id="chartRejSvc" height="200"></canvas></div>
+          </div>
+          <div class="sec-head"><div class="sec-bar"></div><h2>ثانياً: خطة العمل — مرتبة حسب الأولوية</h2></div>
+          <div class="pri-card">
+            <div class="pri-hdr pri-p1">⬤ أولوية أولى — تخفيض فوري ومؤثر</div>
+            <div class="pri-body">
+              <div class="pri-row-hdr"><span>الإجراء</span><span>الجهة المسؤولة</span><span>الأثر المتوقع</span></div>
+              <div class="pri-row"><div class="pri-action">إعداد دليل إرشادي تفصيلي لكل نموذج بمتطلباته وأسباب الرفض الشائعة</div><div class="pri-resp">مدير القسم التقني</div><div class="pri-impact">↓ 90 طلب (29%)</div></div>
+              <div class="pri-row"><div class="pri-action">نشر وعي بالجهات الطالبة حول اختصاص كل قسم عبر جدول توجيه</div><div class="pri-resp">رئيس القسم + تقنية المعلومات</div><div class="pri-impact">↓ 68 طلب (21.9%)</div></div>
+            </div>
+          </div>
+          <div class="pri-card">
+            <div class="pri-hdr pri-p2">⬤ أولوية ثانية — تحسين آلي وإداري</div>
+            <div class="pri-body">
+              <div class="pri-row-hdr"><span>الإجراء</span><span>الجهة المسؤولة</span><span>الأثر المتوقع</span></div>
+              <div class="pri-row"><div class="pri-action">تفعيل كشف التكرار في نظام إتمام وإشعار مقدم الطلب آلياً</div><div class="pri-resp">فريق تقنية إتمام</div><div class="pri-impact">↓ 37 طلب (11.9%)</div></div>
+              <div class="pri-row"><div class="pri-action">إلزام مختصي الخدمة بتدوين سبب الرفض في خانة الملاحظات</div><div class="pri-resp">رؤساء الأقسام</div><div class="pri-impact">توثيق 26 حالة</div></div>
+            </div>
+          </div>
+          <div class="pri-card">
+            <div class="pri-hdr pri-p3">⬤ أولوية ثالثة — تسوية وإعادة فحص</div>
+            <div class="pri-body">
+              <div class="pri-row-hdr"><span>الإجراء</span><span>الجهة المسؤولة</span><span>الأثر المتوقع</span></div>
+              <div class="pri-row"><div class="pri-action">متابعة 26 طلباً مرفوضاً بدون سبب وإعادة فحصها من المصدر</div><div class="pri-resp">جميع الأقسام</div><div class="pri-impact">إعادة تقديم 26 طلباً</div></div>
+              <div class="pri-row"><div class="pri-action">تنسيق مواعيد الوصول مسبقاً مع مقدمي طلبات المعامل</div><div class="pri-resp">المشرف الميداني</div><div class="pri-impact">↓ حالات الباب المغلق</div></div>
+            </div>
+          </div>
+          <div class="note-box">🎯 تنفيذ بنود الأولوية الأولى والثانية كافٍ لتخفيض نسبة الرفض بأكثر من <strong>50%</strong> — الأثر التراكمي: تخفيض من 310 إلى أقل من <strong>155 طلباً</strong> مرفوضاً.</div>
+          <div class="sig-grid">
+            <div class="sig-item"><div style="margin-bottom:24px">المُعدّ / المراجع</div><div class="sig-line">_______________________________</div></div>
+            <div class="sig-item"><div style="margin-bottom:24px">رئيس القسم</div><div class="sig-line">_______________________________</div></div>
+            <div class="sig-item"><div style="margin-bottom:24px">المشرف العام</div><div class="sig-line">_______________________________</div></div>
+          </div>
+        </div>
+        <div class="p-footer"><strong>جامعة الملك عبدالعزيز | الإدارة العامة للخدمات التعليمية</strong><span>قطاع اللوجستيات وسلاسل الإمداد · صفحة ٦ من ٦ · © ٢٠٢٦</span></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/*════════════════════════════════════════════
+  DATA
+════════════════════════════════════════════*/
+const PAGES_CONFIG = [
+  { id:0, icon:'📄', label:'الغلاف'           },
+  { id:1, icon:'📝', label:'المقدمة'           },
+  { id:2, icon:'📊', label:'مؤشرات الأداء'    },
+  { id:3, icon:'📅', label:'الاتجاه الشهري'   },
+  { id:4, icon:'🏛️', label:'الجهات والبيئات'  },
+  { id:5, icon:'🔧', label:'الأجهزة'          },
+  { id:6, icon:'❌', label:'تحليل الرفض'      },
+];
+let currentPage = 0;
+let chartsBuilt = {};
+
+/*════════════════════════════════════════════
+  LANDING COUNTER
+════════════════════════════════════════════*/
+function easeOutExpo(t){ return t===1?1:1-Math.pow(2,-10*t); }
+function animCount(el){
+  const target=+el.dataset.count, dur=target>500?2000:1400;
+  let start=null;
+  function step(ts){
+    if(!start) start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    el.textContent=Math.round(easeOutExpo(p)*target).toLocaleString('en');
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(!e.isIntersecting) return;
+  const card=e.target, delay=+(card.dataset.delay||0);
+  setTimeout(()=>{
+    card.classList.add('in');
+    const n=card.querySelector('[data-count]');
+    if(n) animCount(n);
+  },delay);
+  obs.unobserve(card);
+}),{threshold:.15});
+document.querySelectorAll('.s-card').forEach(c=>obs.observe(c));
+
+/*════════════════════════════════════════════
+  VIEW TRANSITIONS
+════════════════════════════════════════════*/
+function openReport(){
+  const l=document.getElementById('view-landing');
+  const r=document.getElementById('view-report');
+  l.classList.add('fade-out');
+  setTimeout(()=>{
+    l.style.display='none';
+    l.classList.remove('fade-out');
+    r.style.display='block';
+    r.classList.add('fade-in');
+    setTimeout(()=>r.classList.remove('fade-in'),500);
+    buildNav();
+    showPage(0);
+    window.scrollTo(0,0);
+  },350);
+}
+function goHome(){
+  const l=document.getElementById('view-landing');
+  const r=document.getElementById('view-report');
+  r.classList.add('fade-out');
+  setTimeout(()=>{
+    r.style.display='none';
+    r.classList.remove('fade-out');
+    l.style.display='block';
+    l.classList.add('fade-in');
+    setTimeout(()=>l.classList.remove('fade-in'),500);
+    window.scrollTo(0,0);
+  },350);
+}
+
+/*════════════════════════════════════════════
+  PAGE NAVIGATION
+════════════════════════════════════════════*/
+function buildNav(){
+  // Sidebar
+  const nav=document.getElementById('sidebarNav');
+  nav.innerHTML='';
+  PAGES_CONFIG.forEach(p=>{
+    const btn=document.createElement('button');
+    btn.className='r-sidebar-item'+(p.id===0?' active':'');
+    btn.dataset.page=p.id;
+    btn.innerHTML=`<span class="s-ico">${p.icon}</span><span>${p.label}</span>`;
+    btn.onclick=()=>showPage(p.id);
+    nav.appendChild(btn);
+  });
+  // Dots
+  const dots=document.getElementById('pageDots');
+  dots.innerHTML='';
+  PAGES_CONFIG.forEach(p=>{
+    const btn=document.createElement('button');
+    btn.className='r-pg-btn'+(p.id===0?' active':'');
+    btn.dataset.page=p.id;
+    btn.textContent=p.id+1;
+    btn.onclick=()=>showPage(p.id);
+    dots.appendChild(btn);
+  });
+}
+
+function showPage(idx){
+  // Hide all pages
+  document.querySelectorAll('.r-page').forEach(p=>p.classList.remove('active'));
+  // Show target
+  const target=document.querySelector(`.r-page[data-page="${idx}"]`);
+  if(target){ target.classList.add('active'); window.scrollTo(0,0); }
+  // Update sidebar
+  document.querySelectorAll('.r-sidebar-item').forEach(b=>{
+    b.classList.toggle('active',+b.dataset.page===idx);
+  });
+  // Update dots
+  document.querySelectorAll('.r-pg-btn').forEach(b=>{
+    b.classList.toggle('active',+b.dataset.page===idx);
+  });
+  // Arrows
+  document.getElementById('btnPrev').disabled = idx===0;
+  document.getElementById('btnNext').disabled = idx===PAGES_CONFIG.length-1;
+  currentPage=idx;
+  // Build charts lazily
+  buildCharts(idx);
+}
+
+function movePage(dir){
+  const next=currentPage+dir;
+  if(next>=0 && next<PAGES_CONFIG.length) showPage(next);
+}
+
+/*════════════════════════════════════════════
+  CHARTS (Chart.js)
+════════════════════════════════════════════*/
+Chart.defaults.font.family="'Tajawal','Arial',sans-serif";
+Chart.defaults.plugins.legend.rtl=true;
+
+function buildCharts(page){
+  if(chartsBuilt[page]) return;
+  chartsBuilt[page]=true;
+
+  if(page===2){
+    new Chart(document.getElementById('chartStatus'),{
+      type:'doughnut',
+      data:{
+        labels:['تم الإنجاز','مرفوض','مُعاد التوجيه','قيد التنفيذ','صيانة','فحص','تأمين'],
+        datasets:[
+          {label:'الحالة',data:[1365,310,201,148],backgroundColor:['#055934','#C0392B','#1A6FAF','#E67E22'],borderWidth:2,borderColor:'#fff'},
+          {label:'النوع',data:[0,0,0,0,977,758,273],backgroundColor:['transparent','transparent','transparent','transparent','#86C242','#208D44','#055934'],borderWidth:2,borderColor:'#fff'}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{padding:10,font:{size:11}}}}}
+    });
+  }
+  if(page===3){
+    new Chart(document.getElementById('chartMonthly'),{
+      type:'bar',
+      data:{
+        labels:['يناير','فبراير','مارس','أبريل','مايو'],
+        datasets:[{
+          label:'عدد الطلبات',
+          data:[78,56,77,83,101],
+          backgroundColor:['#208D44','#C0392B','#208D44','#208D44','#055934'],
+          borderRadius:6,
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:true,
+        plugins:{legend:{display:false},datalabels:{display:false}},
+        scales:{
+          y:{grid:{color:'#E5E7EB'},ticks:{font:{size:11}},beginAtZero:true},
+          x:{grid:{display:false},ticks:{font:{size:12}}}
+        }
+      }
+    });
+  }
+  if(page===4){
+    new Chart(document.getElementById('chartEntities'),{
+      type:'bar',
+      data:{
+        labels:['الإدارة العامة','كلية العلوم','علوم الإنسان','الآداب','الحاسبات','الاقتصاد','الاتصال','الطب','طب الأسنان','القبول والتسجيل'],
+        datasets:[{
+          label:'عدد الطلبات',
+          data:[404,319,162,145,105,80,61,56,51,48],
+          backgroundColor:['#055934','#055934','#208D44','#208D44','#208D44','#86C242','#86C242','#86C242','#86C242','#86C242'],
+          borderRadius:4,
+        }]
+      },
+      options:{
+        indexAxis:'y',responsive:true,maintainAspectRatio:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{grid:{color:'#E5E7EB'},ticks:{font:{size:10}},beginAtZero:true},
+          y:{grid:{display:false},ticks:{font:{size:10}}}
+        }
+      }
+    });
+  }
+  if(page===5){
+    new Chart(document.getElementById('chartDevices'),{
+      type:'bar',
+      data:{
+        labels:['حاسب آلي','بروجكتر','حبر طابعة','شاشة','طابعة','كرسي','طاولة','أثاث','ماسح'],
+        datasets:[{
+          label:'العدد',
+          data:[392,230,176,94,85,83,70,46,34],
+          backgroundColor:['#055934','#055934','#055934','#208D44','#208D44','#86C242','#86C242','#86C242','#86C242'],
+          borderRadius:5,
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          y:{grid:{color:'#E5E7EB'},ticks:{font:{size:10}},beginAtZero:true},
+          x:{grid:{display:false},ticks:{font:{size:10},maxRotation:30}}
+        }
+      }
+    });
+  }
+  if(page===6){
+    new Chart(document.getElementById('chartRejReasons'),{
+      type:'bar',
+      data:{
+        labels:['بيانات ناقصة','خارج الاختصاص','طلب مكرر','بدون سبب','جهاز غير موجود','عدم تطابق','باب مغلق','أخرى'],
+        datasets:[{
+          label:'العدد',
+          data:[90,68,37,26,11,10,6,62],
+          backgroundColor:['#C0392B','#E67E22','#C0392B','#6B7280','#1A6FAF','#C0392B','#1A6FAF','#6B7280'],
+          borderRadius:4,
+        }]
+      },
+      options:{
+        indexAxis:'y',responsive:true,maintainAspectRatio:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{grid:{color:'#E5E7EB'},ticks:{font:{size:9}},beginAtZero:true},
+          y:{grid:{display:false},ticks:{font:{size:9}}}
+        }
+      }
+    });
+    new Chart(document.getElementById('chartRejSvc'),{
+      type:'bar',
+      data:{
+        labels:['فحص الحاسب','تأمين أحبار','صيانة المعامل','فحص المستلزمات','صيانة الحاسب','صيانة الفصول','خدمات أخرى'],
+        datasets:[{
+          label:'عدد المرفوض',
+          data:[43,38,34,28,27,20,120],
+          backgroundColor:['#C0392B','#E67E22','#E67E22','#208D44','#208D44','#208D44','#6B7280'],
+          borderRadius:5,
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          y:{grid:{color:'#E5E7EB'},ticks:{font:{size:9}},beginAtZero:true},
+          x:{grid:{display:false},ticks:{font:{size:9},maxRotation:30}}
+        }
+      }
+    });
+  }
+}
+</script>
+</body>
+</html>
